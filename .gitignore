@@ -8,3 +8,35 @@ coverage/
 
 *.log
 .DS_Store
+
+# локальные рабочие заметки, в репозиторий не идут
+info.md
+todo.md
+plan.md
+
+# AI-ассистенты: конфиги, правила, история сессий
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+
+.cursor/
+.cursorrules
+.cursorignore
+
+.windsurf/
+.windsurfrules
+
+.aider*
+.continue/
+.codeium/
+.cline/
+.clinerules
+.roo/
+
+.gemini/
+GEMINI.md
+.github/copilot-instructions.md
+
+.specstory/
+repomix-output.*
