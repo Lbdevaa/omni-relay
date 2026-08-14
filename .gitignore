@@ -9,11 +9,6 @@ coverage/
 *.log
 .DS_Store
 
-# локальные рабочие заметки, в репозиторий не идут
-info.md
-todo.md
-plan.md
-
 # AI-ассистенты: конфиги, правила, история сессий
 .claude/
 CLAUDE.md
