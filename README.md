@@ -89,3 +89,16 @@ npm run start:dev
 после чего регистрируется в провайдере вместе с секретом.
 
 Панель RabbitMQ — `localhost:15672`, метрики — `/metrics`, состояние сервиса — `/health`.
+
+— файл валиден
+```
+docker compose config
+```
+— start
+```
+docker compose up -d
+```
+— список
+```
+docker compose ps
+```
