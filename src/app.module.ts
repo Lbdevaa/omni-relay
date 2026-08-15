@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validationSchema } from './config/env.validation';
 import { ConfigModule } from '@nestjs/config';
+import { IngressModule } from './ingress/ingress.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
       validationSchema,
       validationOptions: { abortEarly: false },
     }),
+    IngressModule,
   ],
   controllers: [AppController],
   providers: [AppService],
