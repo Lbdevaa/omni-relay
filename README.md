@@ -102,3 +102,9 @@ docker compose up -d
 ```
 docker compose ps
 ```
+
+Если что-то встанет в unhealthy:
+```
+docker compose logs postgres
+docker inspect dev-rabbitmq-omni-relay --format '{{json .State.Health}}'
+```
