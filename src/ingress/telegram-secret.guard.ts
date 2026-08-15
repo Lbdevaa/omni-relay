@@ -11,8 +11,8 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class TelegramSecretGuard implements CanActivate {
-  constructor(private readonly config: ConfigService) {}
   private readonly logger = new Logger(TelegramSecretGuard.name);
+  constructor(private readonly config: ConfigService) {}
 
   canActivate(
     context: ExecutionContext,

@@ -108,3 +108,52 @@ docker compose ps
 docker compose logs postgres
 docker inspect dev-rabbitmq-omni-relay --format '{{json .State.Health}}'
 ```
+
+dev_secret_placeholder_at_least_32_chars
+```
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Модуль и контроллер
+```
+npx nest g module ingress
+npx nest g controller ingress/telegram --flat
+```
+
+## Три сущности Nest
+
+### Контроллер
+— точка входа HTTP. Он знает, на какой URL и метод отвечать, достаёт данные из запроса и возвращает ответ. Логики в нём не должно быть: принял, передал дальше, отдал результат.
+
+### Провайдер (обычно сервис)
+— где живёт логика. Внедряется в контроллер через конструктор.
+
+### Модуль
+— не папка и не «файл про модуль», а объявление состава: какие контроллеры и провайдеры существуют в этом куске приложения и что из него видно снаружи.
+
+Guard
+```
+npx nest g guard ingress/telegram-secret --flat
+```
+
+Туннель
+```
+winget install Cloudflare.cloudflared
+cloudflared tunnel --url http://localhost:3000 --protocol http2
+```
+
+Три окна:
+
+Приложение — там крутится npm run start:dev
+Туннель — там крутится cloudflared tunnel --url http://localhost:3000. Ответ вида - (https://drink-picture-seem-cameras.trycloudflare.com/)
+Команды —
+```
+$token = (Select-String '^TELEGRAM_BOT_TOKEN=' .env).Line -replace '^TELEGRAM_BOT_TOKEN=',''
+
+$secret = (Select-String '^TELEGRAM_WEBHOOK_SECRET=' .env).Line -replace '^TELEGRAM_WEBHOOK_SECRET=',''
+
+$tunnel = "https://drink-picture-seem-cameras.trycloudflare.com/"
+
+Invoke-RestMethod -Method Post -Uri "https://api.telegram.org/bot$token/setWebhook" -Body @{ url = "$tunnel/webhook/telegram"; secret_token = $secret; drop_pending_updates = $true }
+
+```
