@@ -5,7 +5,7 @@ import { validationSchema } from './config/env.validation';
 import { ConfigModule } from '@nestjs/config';
 import { IngressModule } from './ingress/ingress.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
-import { RabbitmqService } from './rabbitmq.service';
+import { RabbitmqService } from './rabbitmq/rabbitmq.service';
 
 @Module({
   imports: [
