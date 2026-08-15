@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { validationSchema } from './config/env.validation';
 import { ConfigModule } from '@nestjs/config';
 import { IngressModule } from './ingress/ingress.module';
+import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
+import { RabbitmqService } from './rabbitmq.service';
 
 @Module({
   imports: [
@@ -13,8 +15,9 @@ import { IngressModule } from './ingress/ingress.module';
       validationOptions: { abortEarly: false },
     }),
     IngressModule,
+    RabbitmqModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RabbitmqService],
 })
 export class AppModule {}
