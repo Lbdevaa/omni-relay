@@ -1,3 +1,4 @@
+// принимает HTTP-запрос от Telegram
 import {
   Body,
   Controller,

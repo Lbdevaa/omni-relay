@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { IngressModule } from './ingress/ingress.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConsumerModule } from './consumer/consumer.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     IngressModule,
     RabbitmqModule,
+    ConsumerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

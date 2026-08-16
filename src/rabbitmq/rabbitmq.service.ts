@@ -1,3 +1,4 @@
+// единственная точка контакта с брокером - единственное место, где сходятся очередь, нормализация и база
 import {
   Injectable,
   Logger,
@@ -5,7 +6,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { connect, type Channel, type ChannelModel } from 'amqplib';
+import { connect, type Channel, type ChannelModel } from 'amqplib'; // Консьюмер не должен знать про amqplib
 
 @Injectable()
 export class RabbitmqService implements OnModuleInit, OnModuleDestroy {
@@ -50,6 +51,21 @@ export class RabbitmqService implements OnModuleInit, OnModuleDestroy {
       routingKey,
       Buffer.from(JSON.stringify(payload)),
       { persistent: true, contentType: 'application/json' },
+    );
+  }
+
+  async consume(
+    queue: string,
+    handler: (payload: unknown) => Promise<void>,
+  ): Promise<void> {
+    await this.channel.consume(
+      queue,
+      (msg) => {
+        if (!msg) return;
+
+        void handler(JSON.parse(msg.content.toString()));
+      },
+      { noAck: true }, // временно и намеренно
     );
   }
 

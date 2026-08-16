@@ -157,3 +157,42 @@ $tunnel = "https://drink-picture-seem-cameras.trycloudflare.com/"
 Invoke-RestMethod -Method Post -Uri "https://api.telegram.org/bot$token/setWebhook" -Body @{ url = "$tunnel/webhook/telegram"; secret_token = $secret; drop_pending_updates = $true }
 
 ```
+
+## Сервис реализует два интерфейса жизненного цикла Nest:
+
+Хук	Что делает
+OnModuleInit	connect(RABBITMQ_URL) → createChannel() → объявление топологии
+OnModuleDestroy	закрыть канал, затем соединение
+
+Три типа exchange: direct — точное совпадение ключа; fanout — всем очередям, ключ игнорируется; topic — совпадение по шаблону с * (одно слово) и # (любое число слов). Берём topic, потому что ключи вида incoming.telegram, incoming.vk позволят одному консьюмеру подписаться на incoming.#, а другому — только на свой канал.
+
+### durable и persistent
+
+durable: true у очереди означает, что переживёт рестарт брокера её описание. Чтобы пережили сообщения, нужен persistent: true при публикации. Классическая ошибка — поставить первое, забыть второе: после перезапуска очередь на месте, а пустая.
+
+RabbitMQ и PostgreSQL
+
+### Первая миграция
+```
+npm run migration:generate -- src/database/migrations/InitSchema
+```
+
+```
+npm run migration:run
+```
+
+Проверить типы
+```
+npx tsc --noEmit
+```
+
+consumer — объявить состав
+```
+npx nest g module consumer
+npx nest g service consumer/consumer --flat
+```
+
+контакт останется один
+```
+docker compose exec postgres psql -U omni -d omni_db -c "select m.direction, m.text, m.external_id, c.display_name from messages m join contacts c on c.id = m.contact_id order by m.created_at desc limit 5;"
+```

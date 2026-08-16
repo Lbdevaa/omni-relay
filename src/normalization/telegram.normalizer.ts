@@ -1,3 +1,4 @@
+// превратит апдейт Telegram в свою модель
 import { NormalizedAttachment, NormalizedMessage } from './normalized-message';
 
 interface TelegramMessage {
@@ -26,7 +27,7 @@ interface TelegramMessage {
   sticker?: { file_id: string; emoji?: string };
 }
 
-interface TelegramUpdate {
+export interface TelegramUpdate {
   update_id: number;
   message?: TelegramMessage;
 }
