@@ -107,6 +107,7 @@ export class RabbitmqService implements OnModuleInit, OnModuleDestroy {
     msg: ConsumeMessage,
     handler: (payload: unknown) => Promise<void>,
   ): Promise<void> {
+    // throw new Error('boom');
     try {
       await handler(JSON.parse(msg.content.toString()));
       this.channel.ack(msg);
