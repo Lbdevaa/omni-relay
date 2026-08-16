@@ -24,36 +24,43 @@ export class ConsumerService implements OnModuleInit {
     const normalized = normalizeTelegramUpdate(payload as TelegramUpdate);
     if (!normalized) return;
 
-    let contact = await this.contacts.findOne({
+    // findOne → save, и это гонка: два консьюмера пройдут проверку одновременно и вставят обе строки.
+    // Уникальный индекс из этапа 3 такое не пропустит — но упадёт с ошибкой, а нам нужно тихо проигнорировать повтор.
+    await this.contacts.upsert(
+      {
+        channel: normalized.channel,
+        externalId: normalized.contact.externalId,
+        displayName: normalized.contact.displayName,
+        username: normalized.contact.username,
+      },
+      { conflictPaths: ['channel', 'externalId'] },
+    );
+
+    const contact = await this.contacts.findOneOrFail({
       where: {
         channel: normalized.channel,
         externalId: normalized.contact.externalId,
       },
     });
 
-    // create собирает объект сущности в памяти, никуда не ходит
-    // save выполняет INSERT
-    if (!contact) {
-      contact = await this.contacts.save(
-        this.contacts.create({
-          channel: normalized.channel,
-          externalId: normalized.contact.externalId,
-          displayName: normalized.contact.displayName,
-          username: normalized.contact.username,
-        }),
-      );
-    }
+    // Сообщение — через orIgnore, это и есть ON CONFLICT DO NOTHING:
 
-    await this.messages.save(
-      this.messages.create({
+    await this.messages
+      .createQueryBuilder()
+      .insert()
+      .values({
         contactId: contact.id,
         channel: normalized.channel,
         direction: 'in',
         text: normalized.text,
         externalId: normalized.externalId,
         payload: normalized.payload,
-      }),
-    );
+      })
+      .orIgnore()
+      .execute();
+
+    // Почему для контакта upsert, а для сообщения orIgnore: контакт может измениться (человек сменил имя или юзернейм), и обновить его полезно.
+    // Сообщение неизменно — повторная доставка того же update_id означает ровно то же сообщение.
   }
 
   async onModuleInit(): Promise<void> {

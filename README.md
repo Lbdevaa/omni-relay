@@ -196,3 +196,12 @@ npx nest g service consumer/consumer --flat
 ```
 docker compose exec postgres psql -U omni -d omni_db -c "select m.direction, m.text, m.external_id, c.display_name from messages m join contacts c on c.id = m.contact_id order by m.created_at desc limit 5;"
 ```
+
+```
+docker compose exec postgres psql -U omni -d omni_db -c "select (select count(*) from contacts) as контактов, (select count(*) from messages) as сообщений;"
+```
+
+Смена очереди
+```
+docker compose exec rabbitmq rabbitmqctl delete_queue messages.incoming
+```

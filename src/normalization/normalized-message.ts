@@ -9,7 +9,7 @@ export interface NormalizedAttachment {
   fileId: string;
 }
 
-// Проектирование шлюз под мессенджеры/почту
+// Проектирование шлюза под мессенджеры/почту
 export interface NormalizedMessage {
   channel: string;
   externalId: string;
@@ -17,5 +17,5 @@ export interface NormalizedMessage {
   text: string | null;
   attachments: NormalizedAttachment[];
   sentAt: Date;
-  payload: Record<string, unknown>;
+  payload: Record<string, any>; // граница с чужими данными, где тип честно неизвестен
 }

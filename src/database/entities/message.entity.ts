@@ -35,7 +35,7 @@ export class Message {
   externalId: string;
 
   @Column({ type: 'jsonb' })
-  payload: Record<string, unknown>;
+  payload: Record<string, any>; // граница с чужими данными, где тип честно неизвестен
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
