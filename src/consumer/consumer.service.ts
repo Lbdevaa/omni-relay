@@ -21,6 +21,7 @@ export class ConsumerService implements OnModuleInit {
   ) {}
 
   private async handle(payload: unknown): Promise<void> {
+    // throw new Error('test boom');
     const normalized = normalizeTelegramUpdate(payload as TelegramUpdate);
     if (!normalized) return;
 
