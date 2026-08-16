@@ -5,7 +5,6 @@ import { validationSchema } from './config/env.validation';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { IngressModule } from './ingress/ingress.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
-import { RabbitmqService } from './rabbitmq/rabbitmq.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
@@ -28,6 +27,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     RabbitmqModule,
   ],
   controllers: [AppController],
-  providers: [AppService, RabbitmqService],
+  providers: [AppService],
 })
 export class AppModule {}
